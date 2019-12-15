@@ -25,4 +25,33 @@ public class MainController {
     public @ResponseBody Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    @PostMapping(path = "/update")
+    public @ResponseBody String updateUser(@RequestParam String name, @RequestParam String email) {
+        String response = "Not updated";
+        Iterable<User> allUsers = userRepository.findAll();
+        for (User user : allUsers) {
+            if (user.getName().equals(name)) {
+                user.setEmail(email);
+                userRepository.save(user);
+                response = "Updated";
+            }
+        }
+        return response;
+    }
+
+    @DeleteMapping(path = "/delete")
+    public @ResponseBody String deleteUser(@RequestParam String name) {
+        String response = "Not deleted";
+        Iterable<User> allUsers = userRepository.findAll();
+        for (User user : allUsers) {
+            if (user.getName().equals(name)) {
+                Integer id = user.getId();
+                userRepository.deleteById(id);
+                response = "Deleted";
+                break;
+            }
+        }
+        return response;
+    }
 }
